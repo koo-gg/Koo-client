@@ -8,7 +8,8 @@
     "react",
     "react-hooks",
     "import",
-    "jsx-a11y"
+    "jsx-a11y",
+    "tailwindcss"
   ],
   "extends": [
     "eslint:recommended",
@@ -17,6 +18,7 @@
     "plugin:import/recommended",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
+    "plugin:tailwindcss/recommended",
     "prettier"
   ],
   "settings": {
@@ -31,6 +33,7 @@
   },
   "rules": {
     "no-console": "warn",
+    "tailwindcss/classnames-order": "off",
     "import/order": [
       "error",
       {

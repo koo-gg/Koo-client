@@ -13,10 +13,13 @@ const config: webpack.Configuration = {
       {
         test: /\.(ts|tsx)$/,
         include: path.resolve(__dirname, 'src'),
-        use: {
-          loader: "babel-loader",
-        },
+        use: ["babel-loader"]
       },
+      {
+        test: /\.css$/,
+        include: path.resolve(__dirname, 'src'),
+        use: ['style-loader', 'css-loader', 'postcss-loader']
+      }
     ],
   },
   resolve: {
