@@ -1,26 +1,29 @@
-# React project templage
+# Koo project client
 
 ## How to use
 
-`yarn start` to start dev server, :eyes: see `localhost:8080`
+
+### 1. Install nodejs and yarn
+
+```bash
+brew install nodenv
+
+eval "$(nodenv init -)"
+
+nodenv install 16.14.0
+nodenv local 16.14.0
+
+export PATH=~/.nodenv/shims:$PATH
+
+brew install yarn
+```
+
+### 2. Install the packages
+
+`yarn` to install packages
+
+`yarn start` to start dev server and check :eyes: `localhost:8080`
 
 `yarn build` to build the project
 
 and see more sciprts in `package.json`
-
-## Used packages
-
-```txt
-react
-typescrip
-webpack
-babel
-eslint
-prettier
-```
-
-## Customize yourself
-
-`git clone https://github.com/Tolluset/react-pj-template.git`
-
-and customize yourself!
