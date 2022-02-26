@@ -10,6 +10,17 @@
     "lint-fix:eslint": "eslint --fix './src/**/*.{.ts,tsx}'",
     "lint-fix:prettier": "prettier --write './src/**/*.{.ts,tsx}'"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "./src/**/*.{ts.tsx}": [
+      "yarn lint-fix:eslint",
+      "yarn lint-fix:prettier"
+    ]
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.2",
     "react": "^17.0.2",
@@ -46,6 +57,8 @@
     "eslint-plugin-tailwindcss": "^3.4.4",
     "eslint-webpack-plugin": "^3.1.1",
     "html-webpack-plugin": "^5.5.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.4",
     "postcss": "^8.4.6",
     "postcss-loader": "^6.2.1",
     "prettier": "^2.5.1",
