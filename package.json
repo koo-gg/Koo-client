@@ -10,17 +10,6 @@
     "lint-fix:eslint": "eslint --fix './src/**/*.{.ts,tsx}'",
     "lint-fix:prettier": "prettier --write './src/**/*.{.ts,tsx}'"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "./src/**/*.{ts.tsx}": [
-      "yarn lint-fix:eslint",
-      "yarn lint-fix:prettier"
-    ]
-  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.2",
     "react": "^17.0.2",
