@@ -5,9 +5,9 @@ const Home = () => {
   const code = searchParams.get('code');
 
   return (
-    <div className="flex h-screen items-center justify-center">
+    <div className="flex h-screen flex-col items-center justify-center bg-default">
       <Outlet />
-      {code}
+      <p className="text-white">{code}</p>
     </div>
   );
 };
