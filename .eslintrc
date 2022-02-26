@@ -36,7 +36,7 @@
     }
   },
   "rules": {
-    "no-console": "off",
+    "no-console": "warn",
     "tailwindcss/classnames-order": "off",
     "import/order": [
       "error",

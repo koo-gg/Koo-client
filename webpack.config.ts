@@ -11,6 +11,11 @@ const config: webpack.Configuration = {
   entry: './src/index.tsx',
   devServer: {
     port: 3000,
+    client: {
+      overlay: {
+        warnings: false,
+      }
+    }
   },
   module: {
     rules: [
