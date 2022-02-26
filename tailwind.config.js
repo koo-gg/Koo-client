@@ -1,7 +1,11 @@
 module.exports = {
   content: ['./src/**/*.tsx', './public/index.html'],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'media-hover': {'raw': '(hover: hover)'},
+      }
+    },
   },
   plugins: [],
 };
