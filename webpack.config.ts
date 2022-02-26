@@ -4,6 +4,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import 'webpack-dev-server';
+import Dotenv from 'dotenv-webpack';
 
 const config: webpack.Configuration = {
   mode: 'development',
@@ -40,6 +41,7 @@ const config: webpack.Configuration = {
     new ESLintPlugin({
       extensions: ['ts', 'tsx'],
     }),
+    new Dotenv(),
   ],
 };
 

@@ -1,12 +1,10 @@
-import { FaDiscord } from 'react-icons/fa';
+import DiscordLogin from './components/buttons/DiscordLogin';
 
 const App = () => {
+  console.log(process.env.REACT_APP_DISCORD_OAUTH2_URL);
   return (
     <div className="flex h-screen items-center justify-center">
-      <button className="m-4 flex items-center gap-2 rounded-sm bg-[#7289da] p-2 text-white transition-all duration-300 ease-in-out hover:bg-black">
-        <FaDiscord size={20} />
-        Login with Discord
-      </button>
+      <DiscordLogin />
     </div>
   );
 };
