@@ -1,11 +1,7 @@
-import DiscordLogin from './components/buttons/DiscordLogin';
+import Routes from './Routes';
 
 const App = () => {
-  return (
-    <div className="flex h-screen items-center justify-center">
-      <DiscordLogin />
-    </div>
-  );
+  return <Routes />;
 };
 
 export default App;

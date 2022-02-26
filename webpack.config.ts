@@ -14,8 +14,9 @@ const config: webpack.Configuration = {
     client: {
       overlay: {
         warnings: false,
-      }
-    }
+      },
+    },
+    historyApiFallback: true,
   },
   module: {
     rules: [
