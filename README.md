@@ -22,7 +22,7 @@ brew install yarn
 
 `yarn` to install packages
 
-`yarn start` to start dev server and check :eyes: `localhost:8080`
+`yarn start` to start dev server and check `localhost:3000` :eyes:
 
 `yarn build` to build the project
 
