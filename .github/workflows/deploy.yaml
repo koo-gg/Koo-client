@@ -1,29 +1,103 @@
-name: koo-client-ci/cd
+name: koo-client-ci-cd
 
 on: push
 
+env:
+  CACHED_DEPENDENCY_PATH: ${{ github.workspace }}/node_modules
+  CACHED_BUILD_PATH: ${{ github.workspace }}/dist
+  BUILD_CACHE_KEY: ${{ github.sha }}
+
 jobs:
-  lint:
-    name: Lint
+  job_install_dependencies:
+    name: Intsall dependencies
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout current commit (${{ github.sha }})
         uses: actions/checkout@v2
+
+      - name: Compute dependencies hash key
+        id: compute_lockfile_hash
+        run: echo "::set-output name=key::${{ hashFiles('**/yarn.lock') }}"
+      
+      - name: Restore dependencies
+        id: restore_dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATH }}
+          key: dependencies-${{ steps.compute_lockfile_hash.outputs.key }}
+          restore-keys: |
+            dependencies
+
+      - name: Install Dependencies
+        if: steps.restore_dependencies.outputs.cache-hit == 'false'
+        run: yarn
+
+    outputs:
+      dependencies_cache_key: dependencies-${{ steps.compute_lockfile_hash.outputs.key }}
+
+  job_lint:
+    name: Lint
+    needs: job_install_dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout current commit (${{ github.sha }})
+        uses: actions/checkout@v2
+
+      - name: Check dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATH }}
+          key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
 
       - name: Lint
         run: |
-          yarn
           yarn lint
-
-  deploy:
-    name: Deploy
+      
+  job_build:
+    name: Build
+    needs: job_install_dependencies
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout current commit (${{ github.sha }})
         uses: actions/checkout@v2
 
-      - name: Build web app
-        run: |
-          yarn build
+      - name: Check dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATH }}
+          key: ${{ needs.job_install_dependencies.outputs.dependencies_cache_key }}
+
+      - name: Restore bundle
+        id: restore_bundle
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CACHED_BUILD_PATH }}
+          key: build-${{ env.BUILD_CACHE_KEY }}
+          restore-keys: |
+            build
+
+      - name: Build bundle
+        if: steps.restore_bundle.outputs.cache-hit == 'false'
+        run: yarn build
+
+  job_deploy:
+    name: Deploy
+    needs: [job_lint, job_build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout current commit (${{ github.sha }})
+        uses: actions/checkout@v2
+
+      - name: Check bundle cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CACHED_BUILD_PATH }}
+          key: build-${{ env.BUILD_CACHE_KEY }}
+
+      # - name: Build web app
+      #   run: |
+      #     yarn build
