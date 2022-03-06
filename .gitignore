@@ -1,12 +1,8 @@
 node_modules
-
 dist
 
-.env
-
 .vscode
-
+.DS_Store
 yarn-error.log
 
-
-.DS_Store
+.env*
