@@ -54,6 +54,7 @@ jobs:
       - name: Lint
         run: |
           yarn lint
+          echo ${{ env.CACHED_BUILD_PATH }}
       
   job_build:
     name: Build
@@ -79,14 +80,42 @@ jobs:
           restore-keys: |
             build
 
-      - name: Build bundle
-        if: steps.restore_bundle.outputs.cache-hit == 'false'
-        run: yarn build
+      - name: Build DEV bundle
+        if: steps.restore_bundle.outputs.cache-hit == 'false' && github.ref != 'refs/heads/main'
+        run: |
+          cat << EOF >> .env
+          ${{ secrets.ENV_DEV }}
+          EOF
+          NODE_ENV=production yarn build
+
+      - name: Build STG bundle
+        if: steps.restore_bundle.outputs.cache-hit == 'false' && github.ref == 'refs/heads/main'
+        run: |
+          cat << EOF >> .env
+          ${{ secrets.ENV_STG }}
+          EOF
+          NODE_ENV=production yarn build
+
+      - name: Build PRD bundle
+        if: steps.restore_bundle.outputs.cache-hit == 'false' && github.ref_type == 'tag'
+        run: |
+          cat << EOF >> .env
+          ${{ secrets.ENV_PRD }}
+          EOF
+          NODE_ENV=production yarn build
 
   job_deploy:
     name: Deploy
     needs: [job_lint, job_build]
     runs-on: ubuntu-latest
+    services:
+      minio_client:
+        image: minio/mc
+
+    env:
+      MINIO_URL: ${{ secrets.MINIO_URL }}
+      MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+      MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
 
     steps:
       - name: Checkout current commit (${{ github.sha }})
@@ -98,6 +127,24 @@ jobs:
           path: ${{ env.CACHED_BUILD_PATH }}
           key: build-${{ env.BUILD_CACHE_KEY }}
 
-      # - name: Build web app
-      #   run: |
-      #     yarn build
+      - name: Deploy to dev
+        if: github.ref != 'refs/heads/main'
+        run: |
+          docker run -itd --name minio_client -v "$(pwd)"/dist:/dist --entrypoint=/bin/sh minio/mc
+          docker exec minio_client mc alias set koo $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+          docker exec minio_client mc cp -r dist/ koo/dev
+
+      - name: Deploy to stg
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker run -itd --name minio_client -v "$(pwd)"/dist:/dist --entrypoint=/bin/sh minio/mc
+          docker exec minio_client mc alias set koo $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+          docker exec minio_client mc cp -r dist/ koo/stg
+
+      - name: Deploy to prd 
+        if: github.ref_type == 'tag'
+        run: |
+          docker run -itd --name minio_client -v "$(pwd)"/dist:/dist --entrypoint=/bin/sh minio/mc
+          docker exec minio_client mc alias set koo $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+          docker exec minio_client mc cp -r dist/ koo/prd
+
