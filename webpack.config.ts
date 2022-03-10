@@ -13,7 +13,7 @@ const config: webpack.Configuration = {
   mode: mode,
   entry: './src/index.tsx',
   devServer: {
-    port: 3000,
+    port: 8080,
     client: {
       overlay: {
         warnings: false,
