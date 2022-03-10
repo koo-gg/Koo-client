@@ -88,6 +88,14 @@ jobs:
           EOF
           NODE_ENV=production yarn build
 
+      - name: Build STG bundle
+        if: steps.restore_bundle.outputs.cache-hit == 'false' && github.ref == 'refs/heads/main'
+        run: |
+          cat << EOF >> .env
+          ${{ secrets.ENV_STG }}
+          EOF
+          NODE_ENV=production yarn build
+
       - name: Build PRD bundle
         if: steps.restore_bundle.outputs.cache-hit == 'false' && github.ref_type == 'tag'
         run: |
@@ -125,6 +133,13 @@ jobs:
           docker run -itd --name minio_client -v "$(pwd)"/dist:/dist --entrypoint=/bin/sh minio/mc
           docker exec minio_client mc alias set koo $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
           docker exec minio_client mc cp -r dist/ koo/dev
+
+      - name: Deploy to stg
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker run -itd --name minio_client -v "$(pwd)"/dist:/dist --entrypoint=/bin/sh minio/mc
+          docker exec minio_client mc alias set koo $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+          docker exec minio_client mc cp -r dist/ koo/stg
 
       - name: Deploy to prd 
         if: github.ref_type == 'tag'
