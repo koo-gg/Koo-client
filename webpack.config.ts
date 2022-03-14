@@ -6,8 +6,11 @@ import ESLintPlugin from 'eslint-webpack-plugin';
 import 'webpack-dev-server';
 import Dotenv from 'dotenv-webpack';
 
+type modeType = 'none' | 'development' | 'production';
+const mode = (process.env.NODE_ENV as modeType) ?? 'development';
+
 const config: webpack.Configuration = {
-  mode: 'development',
+  mode: mode,
   entry: './src/index.tsx',
   devServer: {
     port: 8080,
@@ -47,7 +50,9 @@ const config: webpack.Configuration = {
     new ESLintPlugin({
       extensions: ['ts', 'tsx'],
     }),
-    new Dotenv(),
+    new Dotenv({
+      path: '.env',
+    }),
   ],
 };
 
