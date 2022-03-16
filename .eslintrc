@@ -38,6 +38,7 @@
   "rules": {
     "no-console": "warn",
     "tailwindcss/classnames-order": "off",
+    "react/prop-types": "off",
     "import/order": [
       "error",
       {
