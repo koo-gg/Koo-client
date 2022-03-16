@@ -127,24 +127,23 @@ jobs:
           path: ${{ env.CACHED_BUILD_PATH }}
           key: build-${{ env.BUILD_CACHE_KEY }}
 
-      - name: Deploy to dev
-        if: github.ref != 'refs/heads/main'
+      - name: Setup minio client
         run: |
           docker run -itd --name minio_client -v "$(pwd)"/dist:/dist --entrypoint=/bin/sh minio/mc
           docker exec minio_client mc alias set koo $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
-          docker exec minio_client mc cp -r dist/ koo/dev
+          
+      - name: Deploy to dev
+        if: github.ref != 'refs/heads/main'
+        run: |
+          docker exec minio_client mc mirror --overwrite dist/ koo/dev
 
       - name: Deploy to stg
         if: github.ref == 'refs/heads/main'
         run: |
-          docker run -itd --name minio_client -v "$(pwd)"/dist:/dist --entrypoint=/bin/sh minio/mc
-          docker exec minio_client mc alias set koo $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
           docker exec minio_client mc cp -r dist/ koo/stg
 
       - name: Deploy to prd 
         if: github.ref_type == 'tag'
         run: |
-          docker run -itd --name minio_client -v "$(pwd)"/dist:/dist --entrypoint=/bin/sh minio/mc
-          docker exec minio_client mc alias set koo $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
           docker exec minio_client mc cp -r dist/ koo/prd
 
