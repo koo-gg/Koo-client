@@ -135,15 +135,15 @@ jobs:
       - name: Deploy to dev
         if: github.ref != 'refs/heads/main'
         run: |
-          docker exec minio_client mc mirror --overwrite dist/ koo/dev
+          docker exec minio_client mc cp -r dist/ koo/dev
 
       - name: Deploy to stg
         if: github.ref == 'refs/heads/main'
         run: |
-          docker exec minio_client mc mirror --overwrite -r dist/ koo/stg
+          docker exec minio_client mc cp -r dist/ koo/stg
 
       - name: Deploy to prd 
         if: github.ref_type == 'tag'
         run: |
-          docker exec minio_client mc mirror --overwrite -r dist/ koo/prd
+          docker exec minio_client mc cp -r dist/ koo/prd
 
