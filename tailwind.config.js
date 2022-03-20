@@ -23,6 +23,10 @@ module.exports = {
       screens: {
         'media-hover': { raw: '(hover: hover)' },
       },
+      gridTemplateColumns: {
+        'guild-list': 'repeat(auto-fill, minmax(120px, 1fr))',
+        'guild-detail': 'repeat(3, minmax(320px, 1fr))'
+      },
     },
   },
   plugins: [],

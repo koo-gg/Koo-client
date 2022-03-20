@@ -12,6 +12,7 @@ const mode = (process.env.NODE_ENV as modeType) ?? 'development';
 const config: webpack.Configuration = {
   mode: mode,
   entry: './src/index.tsx',
+  devtool: 'inline-source-map',
   devServer: {
     port: 8080,
     client: {

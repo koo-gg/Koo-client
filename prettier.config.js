@@ -7,5 +7,4 @@ module.exports = {
   bracketSpacing: true,
   parser: 'typescript',
   arrowParens: 'always',
-  tailwindConfig: 'tailwind.config.js',
 };
