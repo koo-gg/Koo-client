@@ -7,6 +7,7 @@ module.exports = {
         primary: '#2F3136',
         discrod: '#7289DA',
         bgDark: '#2B2D32',
+        Black: "#000000"
       },
       colors : {
         iconDefalt: '#B9BBBE',
@@ -14,8 +15,8 @@ module.exports = {
         iconEffect : "#B6BDC9",
       },
       boxShadow: {
-        'iconEffect': '0 0 20px -10px rgba(0, 0, 0, 0.45)',
-        'iconHover': '0 0 20px -8px rgba(0, 0, 0, 0.62)',
+        'iconEffect': '0 0 20px -10px rgba(0, 0, 0, 0.55)',
+        'iconHover': '0 0 20px -8px rgba(0, 0, 0, 0.7)',
       },
       dropShadow: {
         'iconHover': '0 0 20px -8px rgba(0, 0, 0, 0.62)',
@@ -27,6 +28,10 @@ module.exports = {
         'guild-list': 'repeat(auto-fill, minmax(120px, 1fr))',
         'guild-detail': 'repeat(3, minmax(320px, 1fr))'
       },
+      spacing: {
+        'minus-8': '-2rem',
+        'minus-2/4': '-50%',
+      }
     },
   },
   plugins: [],
